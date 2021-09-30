@@ -12,10 +12,10 @@
         android:id="@+id/tvTasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="8dp"
         android:text="Tasks"
-        android:textColor="#AD000000"
-        android:textSize="24sp"
+        android:textColor="@color/app_default_color"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -23,11 +23,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTasks"
         android:nestedScrollingEnabled="true"
-        android:padding="16dp">
+        android:padding="10dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

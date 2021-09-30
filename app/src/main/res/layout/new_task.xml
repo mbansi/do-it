@@ -7,8 +7,9 @@
         android:id="@+id/etNewtask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:background="@null"
-        android:textSize="23sp"
+        android:textSize="25sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:hint="What's your next task?"/>
     <Button
@@ -16,9 +17,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:background="#006469EE"
-        android:textColor="#7F434343"
+        android:textColor="#FFCCCCCC"
         android:textAllCaps="false"
         android:layout_below="@+id/etNewtask"
         android:layout_alignParentRight="true"
