@@ -1,6 +1,7 @@
 package com.bansi.doit;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,17 +38,20 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         getSupportActionBar().hide();
 
         db = new DoItDatabaseHandler(this);
-        taskList = new ArrayList<>();
+
         fab = findViewById(R.id.fabAdd);
 
 
         rvTask = findViewById(R.id.rvTasks);
-        rvTask.setHasFixedSize(true);
         rvTask.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new ToDoAdapter(this,taskList);
+        taskAdapter = new ToDoAdapter(this,taskList,db);
         rvTask.setAdapter(taskAdapter);
 
-        taskList.addAll(db.getAllTasks());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(taskAdapter));
+        itemTouchHelper.attachToRecyclerView(rvTask);
+
+        taskList = db.getAllTasks();
+        Collections.reverse(taskList);
         taskAdapter.setTasks(taskList);
 
 

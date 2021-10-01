@@ -23,6 +23,8 @@ import com.bansi.doit.database.DoItDatabaseHandler;
 import com.bansi.doit.model.ToDoModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.Objects;
+
 public class AddNewTask extends BottomSheetDialogFragment {
     public static final String TAG = "ActionBottomDialog";
 
@@ -53,7 +55,19 @@ public class AddNewTask extends BottomSheetDialogFragment {
         newTask = getView().findViewById(R.id.etNewtask);
         saveNewTask = getView().findViewById(R.id.btnNewtask);
 
+        boolean isUpdate = false;
 
+        final Bundle bundle = getArguments();
+        if(bundle != null){
+            isUpdate = true;
+            String task = bundle.getString("task");
+            newTask.setText(task);
+            assert task != null;
+            if(task.length()>0)
+                saveNewTask.setTextColor(ContextCompat.getColor(requireContext(), R.color.app_default_color));
+        }
+
+        db = new DoItDatabaseHandler(getActivity());
         newTask.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -82,36 +96,23 @@ public class AddNewTask extends BottomSheetDialogFragment {
             }
         });
 
-
+        final boolean finalIsUpdate = isUpdate;
         saveNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String text = newTask.getText().toString();
-                if(validTask(text)){
-                   long newTask = new DoItDatabaseHandler(getActivity().getApplicationContext()).insertTask(text);
-
-                   Toast.makeText(getContext(),"Added Task",Toast.LENGTH_LONG);
+                if(finalIsUpdate){
+                    db.updateTask(bundle.getInt("id"), text);
                 }
-                else{
+                else {
                     ToDoModel task = new ToDoModel();
                     task.setTask(text);
                     task.setStatus(0);
+                    db.insertTask(task);
                 }
                 dismiss();
             }
         });
-    }
-
-    boolean validTask(String task){
-        boolean isUpdate = false;
-        if(task.length()<=0){
-            return isUpdate;
-        }
-        else{
-            isUpdate = true;
-        }
-        return isUpdate;
     }
 
     @Override

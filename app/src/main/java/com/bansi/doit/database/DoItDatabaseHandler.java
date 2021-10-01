@@ -19,7 +19,7 @@ public class DoItDatabaseHandler extends MainDb{
     public DoItDatabaseHandler(Context context) {
         super(context);
     }
-//
+
     public ArrayList<ToDoModel> getAllTasks(){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<ToDoModel> taskList = new ArrayList<>();
@@ -45,32 +45,36 @@ public class DoItDatabaseHandler extends MainDb{
         return model;
     }
 
-    public long insertTask(String task){
+    public void insertTask(ToDoModel task){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(TASK,task);
+        cv.put(TASK,task.getTask());
         cv.put(STATUS,0);
-        long lastInsertedId = db.insert(DO_IT_TABLE,null,cv);
+        db.insert(DO_IT_TABLE,null,cv);
         db.close();
-        return lastInsertedId;
     }
 
-    public int updateStatus(int id,int status){
+    public void updateStatus(int id,int status){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv  = new ContentValues();
         cv.put(STATUS,status);
-        int updatedID = db.update(DO_IT_TABLE,cv,ID + "=?", new String[]{ String.valueOf(id)});
+        db.update(DO_IT_TABLE,cv,ID + "=?", new String[]{ String.valueOf(id)});
         db.close();
-        return updatedID;
     }
 
-    public int updateTask(int id,String task){
+    public void updateTask(int id,String task){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv  = new ContentValues();
         cv.put(TASK,task);
-        int updatedID = db.update(DO_IT_TABLE,cv,ID + "=?", new String[]{ String.valueOf(id)});
+        db.update(DO_IT_TABLE,cv,ID + "=?", new String[]{ String.valueOf(id)});
         db.close();
-        return updatedID;
+
+    }
+
+    public void deleteTask(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(DO_IT_TABLE, ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
     }
 
 }

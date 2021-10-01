@@ -1,6 +1,7 @@
 package com.bansi.doit.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,11 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
     private MainActivity activity;
     private ArrayList<ToDoModel> taskList;
     private DoItDatabaseHandler db;
-    public ToDoAdapter(Activity activity,ArrayList<ToDoModel> taskList){
+
+    public ToDoAdapter(Activity activity,ArrayList<ToDoModel> taskList,DoItDatabaseHandler db){
         this.activity = (MainActivity) activity;
         this.taskList = taskList;
+        this.db = db;
     }
 
     @NonNull
@@ -44,18 +47,21 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
         holder.task.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int newStatus;
                 if(isChecked){
-                    //newStatus = db.updateStatus(item.getId(),1);
+                     db.updateStatus(item.getId(),1);
                 }
                 else{
-                    //newStatus = db.updateStatus(item.getId(),0);
+                    db.updateStatus(item.getId(),0);
                 }
             }
         });
     }
     private boolean toBoolean(int n){
         return n!=0;
+    }
+
+    public Context getContext() {
+        return activity;
     }
 
     @Override
@@ -68,7 +74,14 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void editItem(int position) {
+    public void deleteTask(int position){
+        ToDoModel item = taskList.get(position);
+        db.deleteTask(item.getId());
+        taskList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void editTask(int position) {
         ToDoModel item = taskList.get(position);
         Bundle bundle = new Bundle();
         bundle.putInt("id", item.getId());
@@ -77,6 +90,9 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
         fragment.setArguments(bundle);
         fragment.show(activity.getSupportFragmentManager(), AddNewTask.TAG);
     }
+
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         CheckBox task;
